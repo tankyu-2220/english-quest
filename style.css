@@ -1,0 +1,409 @@
+/* =======================================
+   ENGLISH QUEST RPG - 完全安定版 CSS
+======================================= */
+
+
+/* ローカルフォント読み込み */
+@font-face {
+  font-family: 'DotGothic16';
+  src: url('fonts/DotGothic16-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'DotGothic16', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  color: white;
+  overflow: hidden;
+  background: black;
+}
+
+
+/* ===============================
+   Game Container
+=============================== */
+#game-container {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 9;
+  margin: auto;
+  overflow: hidden;
+}
+
+/* ===============================
+   START SCREEN
+=============================== */
+#start-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url('images/castle.png') center/cover no-repeat;
+  color: white;
+  z-index: 20;
+}
+
+/* ← ぼかし復活 */
+#start-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(5px);
+  background: rgba(0,0,0,0.35);
+  z-index: -1;
+}
+
+#start-screen .title {
+  font-size: 3.4rem;
+  margin-bottom: 0.5em;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+}
+
+#start-screen .subtitle {
+  font-size: 1.4rem;
+  margin-bottom: 1em;
+}
+
+#player-name-input {
+  font-size: 1.3rem;
+  padding: 13px 18px;
+  margin-bottom: 1.4rem;
+  border-radius: 10px;
+  border: 2px solid white;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  outline: none;
+  text-align: center;
+}
+
+/* ===============================
+   Buttons
+=============================== */
+.btn,
+#start-btn,
+#retry-btn,
+.choice-btn {
+  background: linear-gradient(90deg, #00ffff, #00bfff);
+  border: none;
+  color: black;
+  font-size: 1.2rem;
+  padding: 10px 30px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn:hover,
+#start-btn:hover,
+.choice-btn:hover,
+#retry-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #00cccc, #0099ff);
+}
+
+/* ===============================
+   BATTLE SCREEN
+=============================== */
+#battle-screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  background-position: center;
+  background-size: cover !important;
+  background-repeat: no-repeat;
+  z-index: 10;
+}
+
+#battle-screen:not(.hidden) {
+  display: flex;
+}
+
+.stage-label {
+  position: absolute;
+  top: 3.5%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: #00ffff;
+  text-shadow: 2px 2px 5px black;
+  z-index: 50;
+}
+
+#player-info,
+#enemy-name {
+  position: absolute;
+  top: 13%;
+  color: white;
+  font-size: 1.2rem;
+  text-shadow: 2px 2px 5px black;
+  z-index: 50;
+}
+
+#player-info { left: 8%; }
+#enemy-name { right: 8%; }
+
+
+/* ===============================
+   キャラ画像（勇者・敵）調整版
+=============================== */
+#battle-scene {
+  position: absolute;
+  bottom: 12%;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  z-index: 40;
+}
+
+#player-png,
+#enemy-png {
+  position: absolute;
+  bottom: 0;
+  height: 32%;              /* ← 敵と同じ scale に統一 */
+  max-height: 260px;        /* ← 画面に入り切る安全値 */
+  width: auto;
+  object-fit: contain;      /* ← 余白があっても綺麗に縮小 */
+  image-rendering: pixelated;
+  z-index: 60;
+}
+
+#player-png { 
+  left: 5%;                 /* ← 勇者を左側へ固定 */
+  transform: scaleX(1);     /* ← 左向きのまま */
+}
+
+#enemy-png { 
+  right: 5%;                /* ← 敵を右側へ固定 */
+  transform: scaleX(-1);    /* ← 敵を右向きに反転 */
+}
+
+
+
+/* ===============================
+   HP Bars
+=============================== */
+#hp-bars {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 50;
+}
+
+.hp-label {
+  font-size: 0.9rem;
+  color: #00ffff;
+  text-shadow: 2px 2px 4px black;
+}
+
+#player-hp,
+#enemy-hp {
+  width: 65%;
+  height: 14px;
+  background: rgba(255,255,255,0.25);
+  border: 1px solid #00ffff;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: auto;
+}
+
+#player-hp-fill,
+#enemy-hp-fill {
+  height: 100%;
+  width: 100%;
+  transition: 0.25s ease;
+}
+
+#player-hp-fill {
+  background: linear-gradient(to right, #00ffff, #00bfff);
+}
+
+#enemy-hp-fill {
+  background: linear-gradient(to right, #ff8888, #ff0000);
+}
+
+/* ===============================
+   Quiz Box
+=============================== */
+#quiz-box {
+  position: absolute;
+  bottom: 4%;
+  width: 80%;
+  max-width: 720px;
+  padding: 18px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 2px solid #00ffff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #00ffff;
+  text-align: center;
+  z-index: 70;
+}
+
+#question-text {
+  font-size: 1.5rem;
+  margin-bottom: 14px;
+}
+
+#choices-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ===============================
+   Timer
+=============================== */
+#timer-bar {
+  width: 100%;
+  height: 12px;
+  background: #333;
+  border: 1px solid #00ffff;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+#timer-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #00ffff, #00bfff);
+  transition: width 0.18s linear;
+}
+
+/* ===============================
+   Correct / Wrong Popup
+=============================== */
+.correct-popup,
+.wrong-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: bold;
+  text-shadow: 3px 3px 8px black;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.correct-popup { color: #00ff00; }
+.wrong-popup { color: #ff4444; }
+
+/* ===============================
+   LEVEL UP Banner
+=============================== */
+#levelup-banner {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  font-size: 4rem;
+  color: gold;
+  text-shadow: 0 0 18px #ff0;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.4s ease-out;
+  z-index: 999;
+}
+
+#levelup-banner.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* ===============================
+   ENDING
+=============================== */
+#ending-screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: url('images/ending_bg.png') center/cover;
+  color: white;
+  text-shadow: 2px 2px 4px black;
+  z-index: 30;
+}
+
+#results-container {
+  background: rgba(0,0,0,0.65);
+  padding: 15px 25px;
+  border-radius: 8px;
+  margin: 16px;
+}
+
+/* ===============================
+   Hidden Class
+=============================== */
+.hidden {
+  display: none !important;
+}
+
+/* ===============================
+   Mobile
+=============================== */
+@media(max-width:650px){
+  #question-text {
+    font-size: 1.15rem;
+  }
+  .choice-btn {
+    min-width: 90px;
+    padding: 8px 14px;
+  }
+  #start-screen .title {
+    font-size: 2.4rem;
+  }
+  #player-png, #enemy-png {
+    height: 35%;
+  }
+}
+
+#player-img {
+  max-width: 28% !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+#battle-scene {
+  position: relative;
+  top: -170px; /* 上に動かす（数字は調整OK） */
+}
+
+/* 画面揺れ効果 */
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-10px, 0); }
+  40% { transform: translate(10px, 0); }
+  60% { transform: translate(-10px, 0); }
+  80% { transform: translate(10px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+
+

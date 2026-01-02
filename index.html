@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Quest RPG</title>
+  <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="game-container">
+
+    <!-- 🌟 スタート画面 -->
+    <section id="start-screen" class="screen active">
+      <div class="start-bg"></div>
+
+      <h1 class="title">ENGLISH QUEST RPG</h1>
+      <p class="subtitle">ENTER YOUR NAME!</p>
+
+      <input type="text" id="player-name-input" placeholder="NAME" maxlength="10" />
+      <button id="start-btn" class="btn">START</button>
+    </section>
+    
+    <!-- ⚔️ バトル画面 -->
+    <section id="battle-screen" class="screen hidden">
+
+      <!-- ✅ STAGE表示 -->
+      <div class="stage-label">
+        STAGE <span id="stage-number">1</span>
+      </div>
+
+      <!-- ✅ プレイヤー情報 -->
+      <div id="player-info">
+        <span id="player-name">HERO</span> Lv.<span id="player-lv">1</span>
+      </div>
+
+      <!-- ✅ 敵名 -->
+      <div id="enemy-name">Enemy</div>
+
+      <!-- キャラクター画像 -->
+      <div id="battle-scene">
+        <img id="player-img" src="images/hero.png" alt="Player">
+        <img id="enemy-img" src="images/enemy_stage1.png" alt="Enemy">
+      </div>
+
+      <!-- ✅ HPバー -->
+      <div id="hp-bars">
+        <div class="hp-label">YOU</div>
+        <div id="player-hp"><div id="player-hp-fill"></div></div>
+
+        <div class="hp-label">ENEMY</div>
+        <div id="enemy-hp"><div id="enemy-hp-fill"></div></div>
+      </div>
+
+      <!-- ✅ クイズ欄 -->
+      <div id="quiz-box">
+        <div id="question-text">Question appears here...</div>
+        <div id="choices-container"></div>
+
+        <!-- タイマー -->
+        <div id="timer-bar">
+          <div id="timer-fill"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🌈 エンディング画面 -->
+    <section id="ending-screen" class="screen hidden">
+      <h2 class="title">CONGRATULATIONS!</h2>
+      <p class="subtitle">You defeated the final boss!</p>
+
+      <div id="results-container">
+        <h3>Battle Results</h3>
+        <ul id="results-list"></ul>
+      </div>
+
+      <div id="final-status">
+        <p>Final Level: <span id="final-lv"></span></p>
+        <p>Correct Answers: <span id="correct-total"></span></p>
+      </div>
+
+      <button id="retry-btn" class="btn">PLAY AGAIN</button>
+    </section>
+  </div>
+
+  <!-- ✅ 画面下ガイド -->
+  <footer id="footer-guide">
+    <p>TAP the answer before time runs out!</p>
+    <p>Correct → ATTACK! / Wrong → DAMAGE!</p>
+  </footer>
+
+  <!-- ✅ 背景・キャラ画像プリロード -->
+  <div id="preload" class="hidden">
+    <img src="images/stage1_bg.png" alt="">
+    <img src="images/stage2_bg.png" alt="">
+    <img src="images/stage3_bg.png" alt="">
+    <img src="images/stage4_bg.png" alt="">
+    <img src="images/stage5_bg.png" alt="">
+    <img src="images/stage6_bg.png" alt="">
+    <img src="images/stage7_bg.png" alt="">
+    <img src="images/stage8_bg.png" alt="">
+    <img src="images/stage9_bg.png" alt="">
+    <img src="images/stage10_bg.png" alt="">
+    <img src="images/hero.png" alt="">
+    <img src="images/hero_attack.png" alt="">
+    <img src="images/hero_damage.png" alt="">
+    <img src="images/boss_mid.png" alt="">
+    <img src="images/boss_final.png" alt="">
+  </div>
+  <!-- ✅ STAGEイントロ -->
+  <div id="stage-intro" class="hidden"></div>
+
+  <!-- ✅ 正解/不正解メッセージ -->
+  <div id="result-message"></div>
+
+  <!-- ✅ LEVEL UP演出（追加） -->
+  <div id="levelup-banner" class="hidden">LEVEL UP!</div>
+
+  <!-- ✅ JS -->
+  <script src="script.js"></script>
+
+
+</body>
+</html>
+
