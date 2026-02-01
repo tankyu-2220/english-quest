@@ -112,6 +112,25 @@ html, body {
   background: linear-gradient(90deg, #00cccc, #0099ff);
 }
 
+
+/* 修正後（これで確実に変わる） */
+.choice-btn.correct {
+  background: #2ecc71 !important;
+  color: #fff;
+}
+
+.choice-btn.wrong {
+  background: #e74c3c !important;
+  color: #fff;
+}
+
+
+.choice-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.9;
+}
+
+
 /* ===============================
    BATTLE SCREEN
 =============================== */
@@ -403,6 +422,93 @@ html, body {
   60% { transform: translate(-10px, 0); }
   80% { transform: translate(10px, 0); }
   100% { transform: translate(0, 0); }
+}
+
+/* ===============================
+   STAGE Intro
+=============================== */
+#stage-intro {
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  font-size: 3.5rem;
+  color: #00ffff;
+  text-shadow: 0 0 18px #00ffff, 2px 2px 6px black;
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.4s ease-out;
+  z-index: 9999;
+}
+
+#stage-intro.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+
+
+
+/* ===============================
+   STAGE Overlay（画面暗転）
+=============================== */
+/* STAGE 暗転オーバーレイ */
+#stage-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* STAGE 表示本体 */
+#stage-popup {
+  padding: 24px 60px;
+  background: rgba(0, 0, 0, 0.85); /* ← 黒い帯 */
+  border: 3px solid #00ffff;
+  border-radius: 14px;
+  font-size: 3rem;
+  color: #00ffff;
+  text-shadow: 2px 2px 6px black;
+  box-shadow: 0 0 20px #00ffff;
+}
+
+
+
+/* ===== エンディング背景 ===== */
+.ending-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image: url("images/ending_bg.png");
+  background-size: cover;
+  background-position: center;
+
+  z-index: -1;
+}
+
+/* ===== CONGRATULATION 文字 ===== */
+.ending-title {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 48px;
+  text-align: center;
+  margin-top: 40px;
+
+  color: gold;
+  text-shadow: 0 0 10px orange, 0 0 20px red;
+
+  animation: endingFlash 2s infinite;
+}
+
+@keyframes endingFlash {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 

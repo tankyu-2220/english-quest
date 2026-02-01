@@ -48,6 +48,9 @@ const enemyHpFill = document.getElementById("enemy-hp-fill");
 
 const stageIntro = document.getElementById("stage-intro");
 const levelupBanner = document.getElementById("levelup-banner");
+const stageOverlay = document.getElementById("stage-overlay");
+const stagePopupNumber = document.getElementById("stage-popup-number");
+
 
 const resultsList = document.getElementById("results-list");
 const finalLvEl = document.getElementById("final-lv");
@@ -202,17 +205,33 @@ function startStage() {
   });
 }
 
-/* --------- STAGEイントロ --------- */
 function showStageIntro(num, cb) {
-  if (!stageIntro) { if (cb) cb(); return; }
-  stageIntro.textContent = `STAGE ${num}`;
-  stageIntro.classList.remove("hidden");
-  // 1.5秒表示（要望）
+  console.log("showStageIntro called", num);
+
+  if (!stageOverlay) {
+    console.error("stageOverlay not found");
+    if (cb) cb();
+    return;
+  }
+
+  if (!stagePopupNumber) {
+    console.error("stagePopupNumber not found");
+    if (cb) cb();
+    return;
+  }
+
+  stagePopupNumber.textContent = num;
+  stageOverlay.classList.remove("hidden");
+
   setTimeout(() => {
-    stageIntro.classList.add("hidden");
+    stageOverlay.classList.add("hidden");
     if (typeof cb === "function") cb();
   }, 1500);
 }
+
+
+console.log("★ showQuestion called");
+
 
 /* --------- 問題表示 --------- */
 let currentQuestion = null;
@@ -242,9 +261,9 @@ function showQuestion() {
   const opts = shuffle([...currentQuestion.options]);
   opts.forEach(opt => {
     const btn = document.createElement("button");
-    btn.className = "choice-btn";
+    btn.className = "btn choice-btn";
     btn.textContent = opt;
-    btn.onclick = () => handleAnswer(opt);
+    btn.onclick = () => handleAnswer(btn,opt);
     choicesContainer.appendChild(btn);
   });
 
@@ -266,7 +285,7 @@ function startTimer(seconds) {
     if (timerRemaining <= 0) {
       clearInterval(questionTimer);
       // タイムアップは不正解扱い
-      handleAnswer(null, true);
+      handleAnswer(null, null, true);
     }
   }, timerTickInterval);
 }
@@ -294,90 +313,83 @@ function setHeroMotion(type) {
 
 
 /* --------- 回答処理 --------- */
-function handleAnswer(selectedOption, isTimeout = false) {
+function handleAnswer(clickedButton, selectedOption, isTimeout = false) {
   clearInterval(questionTimer);
   totalAnswers++;
 
   const correct = currentQuestion ? currentQuestion.a : null;
   const isCorrect = !isTimeout && selectedOption === correct;
 
-// ===== モーション再生 =====
-if (isCorrect) {
-  setHeroMotion("attack");
-  shakeScreen(); 
-} else {
-  setHeroMotion("damage");
-}
-// 0.4秒で通常に戻す
-setTimeout(() => setHeroMotion("normal"), 700);
+  // すべての選択肢ボタンを取得
+  const buttons = document.querySelectorAll(".choice-btn");
 
-  // 表示メッセージ（ユーザー希望: CORRECT / FALSE）
+  // 全ボタンを判定表示
+  buttons.forEach(btn => {
+    btn.disabled = true;
+
+    if (btn.textContent === correct) {
+      // 正解は必ず緑
+      btn.classList.add("correct");
+    } else {
+      // それ以外は必ず赤
+      btn.classList.add("wrong");
+    }
+  });
+
+  // ===== モーション =====
+  if (isCorrect) {
+    setHeroMotion("attack");
+    shakeScreen();
+  } else {
+    setHeroMotion("damage");
+  }
+  setTimeout(() => setHeroMotion("normal"), 700);
+
+  // CORRECT / FALSE 表示
   if (resultMessage) {
     resultMessage.textContent = isCorrect ? "CORRECT" : "FALSE";
     resultMessage.classList.add("show");
     setTimeout(() => resultMessage.classList.remove("show"), 700);
   }
 
-
-
-  // 敵/自分のダメージ処理（正解で敵HP減少、間違いでプレイヤー減少）
+  // ダメージ処理
   if (isCorrect) {
     enemyHP -= 35;
-    if (enemyHP < 0) enemyHP = 0;
     correctAnswersTotal++;
   } else {
     playerHP -= 15;
-    if (playerHP < 0) playerHP = 0;
   }
+
+  if (enemyHP < 0) enemyHP = 0;
+  if (playerHP < 0) playerHP = 0;
   updateHPBars();
 
-  // ログ（STAGE10 のみ最終表示するがログ自体は全部取る）
+  // ログ
   reviewResults.push({
     stage,
     q: currentQuestion ? currentQuestion.q : "(timeout)",
-    selected: selectedOption === null ? "(TIMEUP)" : selectedOption,
-    correct: currentQuestion ? correct : null,
+    selected: selectedOption ?? "(TIMEUP)",
+    correct,
     ok: isCorrect
   });
 
-  // レベルアップ判定：3問正解ごと（累積）
+  // レベルアップ
   if (correctAnswersTotal > 0 && correctAnswersTotal % 3 === 0) {
     playerLv++;
-    if (playerLvEl) playerLvEl.textContent = playerLv;
+    playerLvEl.textContent = playerLv;
     showLevelUp();
   }
 
-  // 敵撃破判定
-  if (enemyHP <= 0) {
-    // ステージクリア
-    return setTimeout(stageClear, 700);
+  if (enemyHP <= 0) return setTimeout(stageClear, 700);
+  if (playerHP <= 0) return setTimeout(gameOver, 700);
+
+  if (stage === 10 && usedQuestions[10]?.length >= 6) {
+    return setTimeout(endGame, 700);
   }
 
-  // プレイヤー敗北判定
-  if (playerHP <= 0) {
-    return setTimeout(gameOver, 700);
-  }
-
-  // STAGE10 は仕様：6問で終了にしたい場合は usedQuestions[10].length >= 6
-  // STAGE10 6問終了 → endGame
-if (stage === 10 && usedQuestions[10] && usedQuestions[10].length >= 6) {
-
-  // ❗ここで強制的に最後の問題ログを確定させる（特に TIMEUP の時）
-  reviewResults.push({
-    stage,
-    q: currentQuestion ? currentQuestion.q : "(timeout)",
-    selected: selectedOption === null ? "(TIMEUP)" : selectedOption,
-    correct: currentQuestion ? correct : null,
-    ok: isCorrect
-  });
-
-  return setTimeout(endGame, 700);
-}
-
-
-  // 次の問題へ（短遅延）
   setTimeout(showQuestion, 700);
 }
+
 
 /* --------- ステージクリア / 次ステージ --------- */
 function stageClear() {
@@ -394,6 +406,8 @@ function stageClear() {
     return setTimeout(endGame, 800);
   } else {
     stage++;
+    goToEnding();
+    return;
     // 次ステージではプレイヤーHPを全回復（要求）
     playerHP = maxPlayerHP;
     // 敵HPは startStage 内でリセットされる
@@ -522,16 +536,20 @@ function shakeScreen() {
   }, 400); // アニメと同じ時間
 }
 
-// 既存：正解 or 不正解の文字を表示
-resultText.textContent = isCorrect ? "CORRECT" : "FALSE";
+function goToEnding() {
+  const endingScreen = document.getElementById("ending-screen");
 
-// 🔽 ここを追加！（正しい答えの表示）
-const correctAnsText = document.createElement("p");
-correctAnsText.textContent = `Correct answer is: ${currentQuestion.correct}`;
-correctAnsText.classList.add("answer-info");
-resultArea.appendChild(correctAnsText);
+  // 背景をエンディング用に
+  endingScreen.style.backgroundImage = "url('images/ending_bg.png')";
 
+  // タイトルを書き換え
+  const title = endingScreen.querySelector(".title");
+  if (title) {
+    title.textContent = "CONGRATULATIONS!";
+  }
 
+  endGame();
+}
 
 
 

@@ -63,12 +63,22 @@
           <div id="timer-fill"></div>
         </div>
       </div>
-    </section>
+
+  
+
+  </section>
 
     <!-- 🌈 エンディング画面 -->
     <section id="ending-screen" class="screen hidden">
-      <h2 class="title">CONGRATULATIONS!</h2>
-      <p class="subtitle">You defeated the final boss!</p>
+
+    <!-- エンディング背景 -->
+    <div class="ending-bg"></div>
+
+    <!-- お祝いメッセージ -->
+    <h1 class="ending-title">CONGRATULATION!</h1>
+
+    <p class="subtitle">You defeated the final boss!</p>
+
 
       <div id="results-container">
         <h3>Battle Results</h3>
@@ -89,8 +99,9 @@
     <p>TAP the answer before time runs out!</p>
     <p>Correct → ATTACK! / Wrong → DAMAGE!</p>
   </footer>
-
-  <!-- ✅ 背景・キャラ画像プリロード -->
+  
+  
+ <!-- ✅ 背景・キャラ画像プリロード -->
   <div id="preload" class="hidden">
     <img src="images/stage1_bg.png" alt="">
     <img src="images/stage2_bg.png" alt="">
@@ -117,9 +128,25 @@
   <!-- ✅ LEVEL UP演出（追加） -->
   <div id="levelup-banner" class="hidden">LEVEL UP!</div>
 
+ 
+
+ <div id="answer-overlay" class="hidden">
+   <div id="answer-detail">
+     <p id="judge-text"></p>
+     <p id="correct-detail"></p>
+     <div id="other-detail"></div>
+   </div>
+ </div>
+
+ 
+  <div id="stage-overlay" class="hidden">
+   <div id="stage-popup">
+     STAGE <span id="stage-popup-number">1</span>
+   </div>
+  </div> 
+
   <!-- ✅ JS -->
   <script src="script.js"></script>
-
 
 </body>
 </html>
