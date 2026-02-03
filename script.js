@@ -402,17 +402,17 @@ function stageClear() {
 
   // 次ステージ or 終了
   if (stage >= maxStage) {
-    // STAGE10クリアで終了
-    return setTimeout(endGame, 800);
-  } else {
-    stage++;
-    goToEnding();
-    return;
-    // 次ステージではプレイヤーHPを全回復（要求）
-    playerHP = maxPlayerHP;
-    // 敵HPは startStage 内でリセットされる
-    setTimeout(startStage, 900);
-  }
+  // STAGE10クリアで終了
+  return setTimeout(endGame, 800);
+} else {
+  stage++;
+
+  // 次ステージではプレイヤーHPを全回復
+  playerHP = maxPlayerHP;
+
+  // 次のステージへ
+  setTimeout(startStage, 900);
+ }
 }
 
 /* --------- レベルアップ演出 --------- */
@@ -535,22 +535,6 @@ function shakeScreen() {
     game.classList.remove("shake");
   }, 400); // アニメと同じ時間
 }
-
-function goToEnding() {
-  const endingScreen = document.getElementById("ending-screen");
-
-  // 背景をエンディング用に
-  endingScreen.style.backgroundImage = "url('images/ending_bg.png')";
-
-  // タイトルを書き換え
-  const title = endingScreen.querySelector(".title");
-  if (title) {
-    title.textContent = "CONGRATULATIONS!";
-  }
-
-  endGame();
-}
-
 
 
 
