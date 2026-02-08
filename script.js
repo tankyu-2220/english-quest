@@ -103,7 +103,7 @@ const stageQuestions = {
   ],
   8: [
     { q: "One boy is looking forward to ___ tha hero.", options: ["meet", "met", "meeting", "being met"], a: "meeting" },
-    { q: "They found a small ___ near the river.", options: ["village", "apple", "stone", "lesson"], a: "village" },
+    { q: "They found a small village ___ nobody live.", options: ["in which", "that", "where", "in where"], a: "in which" },
     { q: "The boy ___ to be a hero since he was little.", options: ["had wanted", "want", "wants", "wanted"], a: "had wanted" },
   ],
   9: [
@@ -438,7 +438,8 @@ function gameOver() {
 
 // ---------- 替え用：endGame 関数（この関数だけ既存と置き換えてください） ----------
 // ---------- 全ステージの結果を表示する endGame 関数（置き換え版） ----------
-function endGame(forceWin = true) {
+// ---------- 正しい endGame（完成版） ----------
+function endGame() {
   clearInterval(questionTimer);
 
   battleScreen.classList.add("hidden");
@@ -446,96 +447,83 @@ function endGame(forceWin = true) {
 
   resultsList.innerHTML = "";
 
-  // ---- ステージごとに group 化 ----
+  // ステージごとにまとめる
   const byStage = {};
   reviewResults.forEach(r => {
     if (!byStage[r.stage]) byStage[r.stage] = [];
     byStage[r.stage].push(r);
   });
 
-  // ---- ステージ順に結果を表示 ----
-  for (let st = 1; st <= 10; st++) {
+  for (let st = 1; st <= maxStage; st++) {
     if (!byStage[st]) continue;
 
-    const stageLogs = byStage[st];
-    const questionLogs = stageLogs.filter(r => r.ok !== undefined);
-    const summaries = stageLogs.filter(r => r.summary !== undefined);
-
-    // 見出し
     const header = document.createElement("li");
     header.style.fontWeight = "bold";
-    header.style.marginTop = "10px";
     header.textContent = `=== STAGE ${st} Results ===`;
     resultsList.appendChild(header);
 
-    // ---- 問題ログ ----
-    if (questionLogs.length > 0) {
-      questionLogs.forEach((r, idx) => {
+    byStage[st].forEach((r, idx) => {
+      if (r.ok !== undefined) {
         const li = document.createElement("li");
 
         const qText = r.q || "(question)";
-        const your = (r.selected === null || r.selected === "(TIMEUP)") ? "(TIMEUP)" : r.selected;
-        const correct = r.correct == null ? "(no answer)" : r.correct;
+        const your =
+          r.selected === null || r.selected === "(TIMEUP)"
+            ? "(TIMEUP)"
+            : r.selected;
+
+        const correct = r.correct ?? "(no answer)";
         const mark = r.ok ? "✅" : "❌";
 
-        li.textContent = `Q${idx + 1}: ${mark} ${qText} — Your: ${your} / Ans: ${correct}`;
-        resultsList.appendChild(li);
-      });
-    } else {
-      const li = document.createElement("li");
-      li.textContent = "（このステージの出題なし）";
-      resultsList.appendChild(li);
-    }
+        li.textContent =
+          `Q${idx + 1}: ${mark} ${qText} — Your: ${your} / Ans: ${correct}`;
 
-    // ---- summary（WIN / CLEAR） ----
-    if (summaries.length > 0) {
-      summaries.forEach(s => {
-        const li = document.createElement("li");
-        li.style.marginLeft = "10px";
-        li.textContent = `→ ${s.summary}`;
         resultsList.appendChild(li);
-      });
-    }
+      }
+    });
+
+    // summary
+    const summaries = byStage[st].filter(r => r.summary);
+    summaries.forEach(s => {
+      const li = document.createElement("li");
+      li.style.marginLeft = "10px";
+      li.textContent = `→ ${s.summary}`;
+      resultsList.appendChild(li);
+    });
   }
 
-  // ---- 最終レベル表示 ----
   finalLvEl.textContent = playerLv;
 
-  // ---- 全ステージの総正解数 ----
   const correctAll = reviewResults.filter(r => r.ok === true).length;
-  const totalQuestionsAll = reviewResults.filter(r => r.ok !== undefined).length;
-  correctTotalEl.textContent = `${correctAll} / ${totalQuestionsAll}`;
-}
+  const totalAll = reviewResults.filter(r => r.ok !== undefined).length;
 
+  correctTotalEl.textContent = `${correctAll} / ${totalAll}`;
+}
 
 /* --------- HP 更新 UI --------- */
 function updateHPBars() {
-  if (playerHpFill) playerHpFill.style.width = `${(playerHP / maxPlayerHP) * 100}%`;
-  if (enemyHpFill) enemyHpFill.style.width = `${(enemyHP / maxEnemyHP) * 100}%`;
+  if (playerHpFill)
+    playerHpFill.style.width = `${(playerHP / maxPlayerHP) * 100}%`;
 
-  // hp ラベルが #hp-bars の中で直接文字になっている場合は CSS 側で上書きされる想定。
+  if (enemyHpFill)
+    enemyHpFill.style.width = `${(enemyHP / maxEnemyHP) * 100}%`;
 }
 
-/* --------- 初期 UI セット（ページロード時） --------- */
+/* --------- 初期 UI セット --------- */
 document.addEventListener("DOMContentLoaded", () => {
-  // ensure initial UI
   playerNameEl.textContent = playerName;
   playerLvEl.textContent = playerLv;
   updateHPBars();
 });
 
-// ===== 画面揺れ関数 =====
+// ===== 画面揺れ =====
 function shakeScreen() {
-  const game = document.getElementById("battle-screen"); // ←ここが画面全体
+  const game = document.getElementById("battle-screen");
   if (!game) return;
 
   game.classList.add("shake");
-
-  setTimeout(() => {
-    game.classList.remove("shake");
-  }, 400); // アニメと同じ時間
+  setTimeout(() => game.classList.remove("shake"), 400);
 }
-
 
 
 

@@ -115,13 +115,13 @@ html, body {
 
 /* 修正後（これで確実に変わる） */
 .choice-btn.correct {
-  background: #2ecc71 !important;
-  color: #fff;
+  background: #7CFC00 !important;
+  color: #006400;
 }
 
 .choice-btn.wrong {
-  background: #e74c3c !important;
-  color: #fff;
+  background: #ea5506 !important;
+  color: #6B0300;
 }
 
 
@@ -239,7 +239,7 @@ html, body {
   width: 65%;
   height: 14px;
   background: rgba(255,255,255,0.25);
-  border: 1px solid #00ffff;
+  border: 1px solid #000000;
   border-radius: 8px;
   overflow: hidden;
   margin: auto;
@@ -253,11 +253,11 @@ html, body {
 }
 
 #player-hp-fill {
-  background: linear-gradient(to right, #00ffff, #00bfff);
+  background: linear-gradient(to right, #88f026, #aaff59);
 }
 
 #enemy-hp-fill {
-  background: linear-gradient(to right, #ff8888, #ff0000);
+  background: linear-gradient(to right, #f55027, #ad360a);
 }
 
 /* ===============================
@@ -337,7 +337,7 @@ html, body {
   left: 50%;
   transform: translate(-50%, -50%) scale(0.8);
   font-size: 4rem;
-  color: gold;
+  color: #fff875;
   text-shadow: 0 0 18px #ff0;
   opacity: 0;
   pointer-events: none;
@@ -454,14 +454,22 @@ html, body {
 =============================== */
 /* STAGE 暗転オーバーレイ */
 #stage-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 9999;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.7);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #FFD700;
+  z-index: 999;
 }
+
+.hidden {
+  display: none;
+}
+
 
 /* STAGE 表示本体 */
 #stage-popup {
@@ -478,36 +486,32 @@ html, body {
 
 
 /* ===== エンディング背景 ===== */
+/* エンディング背景 */
 .ending-bg {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background-image: url("images/ending_bg.png");
   background-size: cover;
   background-position: center;
-
+  opacity: 0.8;
   z-index: -1;
 }
 
-/* ===== CONGRATULATION 文字 ===== */
-.ending-title {
-  font-family: 'DotGothic16', sans-serif;
+/* CONGRATULATIONS 文字 */
+#congrats-text {
   font-size: 48px;
+  color: gold;
   text-align: center;
   margin-top: 40px;
+  text-shadow: 2px 2px 4px black;
 
-  color: gold;
-  text-shadow: 0 0 10px orange, 0 0 20px red;
-
-  animation: endingFlash 2s infinite;
+  animation: congratsPop 1.2s ease;
 }
 
-@keyframes endingFlash {
-  0%   { transform: scale(1); }
-  50%  { transform: scale(1.08); }
+@keyframes congratsPop {
+  0%   { transform: scale(0.5); opacity: 0; }
+  70%  { transform: scale(1.1); opacity: 1; }
   100% { transform: scale(1); }
 }
 

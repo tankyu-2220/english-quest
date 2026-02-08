@@ -69,30 +69,26 @@
   </section>
 
     <!-- 🌈 エンディング画面 -->
-    <section id="ending-screen" class="screen hidden">
+  <section id="ending-screen" class="screen hidden">
 
-    <!-- エンディング背景 -->
     <div class="ending-bg"></div>
 
-    <!-- お祝いメッセージ -->
-    <h1 class="ending-title">CONGRATULATION!</h1>
-
+    <h2 id="congrats-text">CONGRATULATIONS!</h2>
     <p class="subtitle">You defeated the final boss!</p>
 
+    <div id="results-container">
+      <h3>Battle Results</h3>
+      <ul id="results-list"></ul>
+    </div>
 
-      <div id="results-container">
-        <h3>Battle Results</h3>
-        <ul id="results-list"></ul>
-      </div>
+    <div id="final-status">
+      <p>Final Level: <span id="final-lv"></span></p>
+      <p>Correct Answers: <span id="correct-total"></span></p>
+    </div>
 
-      <div id="final-status">
-        <p>Final Level: <span id="final-lv"></span></p>
-        <p>Correct Answers: <span id="correct-total"></span></p>
-      </div>
-
-      <button id="retry-btn" class="btn">PLAY AGAIN</button>
-    </section>
-  </div>
+    <button id="retry-btn" class="btn">PLAY AGAIN</button>
+  </section>
+ </div>
 
   <!-- ✅ 画面下ガイド -->
   <footer id="footer-guide">
@@ -139,6 +135,11 @@
  </div>
 
  
+<div id="stage-overlay" class="hidden">
+  <div class="stage-text">
+    STAGE <span id="stage-popup-number"></span>
+  </div>
+</div>
 
 
   <!-- ✅ JS -->
